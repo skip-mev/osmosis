@@ -43,6 +43,8 @@ DOCKER := $(shell which docker)
 E2E_UPGRADE_VERSION := "v21"
 #SHELL := /bin/bash
 
+BUILD_TAGS ?= excludeIncrement
+
 # Go version to be used in docker images
 GO_VERSION := $(shell cat go.mod | grep -E 'go [0-9].[0-9]+' | cut -d ' ' -f 2)
 # currently installed Go version
@@ -142,7 +144,7 @@ endif
 
 build: go.sum
 	mkdir -p $(BUILDDIR)/
-	GOWORK=off go build -mod=readonly  $(BUILD_FLAGS) -o $(BUILDDIR)/ $(GO_MODULE)/cmd/osmosisd
+	GOWORK=off go build -tags $(BUILD_TAGS) -mod=readonly  $(BUILD_FLAGS) -o $(BUILDDIR)/ $(GO_MODULE)/cmd/osmosisd
 
 install: build-check-version go.sum
 	GOWORK=off go install -mod=readonly $(BUILD_FLAGS) $(GO_MODULE)/cmd/osmosisd
